@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 class ApiClient {
 
     companion object {
-        val baseUrl = BuildConfig.BASE_URL
+        private const val baseUrl = BuildConfig.BASE_URL
         private lateinit var retrofit: Retrofit
 
         fun getClient(): Retrofit {

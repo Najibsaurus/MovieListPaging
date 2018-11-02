@@ -6,8 +6,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import bdd.jogja.paging.datasource.MovieBoundaryCallback
 import bdd.jogja.paging.datasource.MovieDataSource
 import bdd.jogja.paging.db.Movie
+import bdd.jogja.paging.db.MovieRoomDatabase
 
 
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,7 +25,8 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
             .setInitialLoadSizeHint(pageSize)
             .setPageSize(pageSize)
             .build()
-        movieList = initPagedListBuilder(config).build()
+        //movieList = initPagedListBuilder(config).build()
+        movieList = initDBPagedListBuilder(config).build()
         return movieList
     }
 
@@ -36,6 +39,16 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         return LivePagedListBuilder<Int, Movie>(dataSourceFactory, config)
+    }
+
+
+    private fun initDBPagedListBuilder(config: PagedList.Config):
+            LivePagedListBuilder<Int, Movie> {
+        val database = MovieRoomDatabase.createInstance(getApplication())
+        val livePageListBuilder = LivePagedListBuilder<Int, Movie>(
+            database.movieDao().getAllMovies(), config)
+        livePageListBuilder.setBoundaryCallback(MovieBoundaryCallback(database))
+        return livePageListBuilder
     }
 
 }

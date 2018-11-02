@@ -9,11 +9,9 @@ import android.arch.persistence.room.Query
 
 @Dao
 interface MovieDao {
-
     companion object {
         const val tableName = "movies"
     }
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(movie: List<Movie>)
 
@@ -22,6 +20,5 @@ interface MovieDao {
 
     @Query("DELETE FROM $tableName")
     fun deleteAll()
-
 
 }

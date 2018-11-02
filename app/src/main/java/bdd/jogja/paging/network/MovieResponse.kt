@@ -22,4 +22,8 @@ class MovieResponse {
     fun getResults(): List<Movie>? {
         return results
     }
+
+    fun getPage(): Int?{
+        return page
+    }
 }
