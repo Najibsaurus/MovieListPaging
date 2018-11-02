@@ -1,7 +1,6 @@
 package bdd.jogja.paging
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager
 import bdd.jogja.paging.db.Movie
 import bdd.jogja.paging.ui.MainActivityUI
 import org.jetbrains.anko.setContentView
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProviders.of(this).get(MovieViewModel::class.java)
-    }
+
+    val viewModel: MovieViewModel by viewModel()
     private val adapter = MovieAdapter(this)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()

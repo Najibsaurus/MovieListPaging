@@ -26,31 +26,8 @@ class MovieBoundaryCallback(private val db: MovieRoomDatabase) : PagedList.Bound
 
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
-
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) { helperCallback ->
-            call.getMovie(BuildConfig.API_KEY, firstPage)
-
-                .enqueue(object : Callback<MovieResponse> {
-
-                    override fun onFailure(call: Call<MovieResponse>?, t: Throwable) {
-
-                        Log.e(TAG, "Failed")
-                        helperCallback.recordFailure(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<MovieResponse>?,
-                        response: Response<MovieResponse>
-                    ) {
-
-                        val data = response.body()?.getResults()
-                        firstPage ++
-                        executor.execute {
-                            db.movieDao().insert(data ?: listOf())
-                            helperCallback.recordSuccess()
-                        }
-                    }
-                })
+            insertAndSaveMovie(firstPage, helperCallback)
         }
 
     }
@@ -58,29 +35,31 @@ class MovieBoundaryCallback(private val db: MovieRoomDatabase) : PagedList.Bound
     override fun onItemAtEndLoaded(itemAtEnd: Movie) {
         super.onItemAtEndLoaded(itemAtEnd)
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) { helperCallback ->
-            call.getMovie(BuildConfig.API_KEY, firstPage)
-                .enqueue(object : Callback<MovieResponse> {
-
-                    override fun onFailure(call: Call<MovieResponse>?, t: Throwable) {
-                        Log.e(TAG, "Failed")
-
-                        helperCallback.recordFailure(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<MovieResponse>?,
-                        response: Response<MovieResponse>) {
-
-                        val data = response.body()?.getResults()
-                        firstPage ++
-                        executor.execute {
-                            db.movieDao().insert(data ?: listOf())
-                            helperCallback.recordSuccess()
-                        }
-                    }
-                })
+            insertAndSaveMovie(firstPage, helperCallback)
         }
+    }
 
+    private fun insertAndSaveMovie(page : Int, helperCallback: PagingRequestHelper.Request.Callback){
+        call.getMovie(BuildConfig.API_KEY, page)
+            .enqueue(object : Callback<MovieResponse> {
+
+                override fun onFailure(call: Call<MovieResponse>?, t: Throwable) {
+                    Log.e(TAG, "Something error")
+                    helperCallback.recordFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<MovieResponse>?,
+                    response: Response<MovieResponse>) {
+
+                    val data = response.body()?.getResults()
+                    firstPage ++
+                    executor.execute {
+                        db.movieDao().insert(data ?: listOf())
+                        helperCallback.recordSuccess()
+                    }
+                }
+            })
     }
 
 

@@ -15,10 +15,13 @@ class MainActivityUI : AnkoComponent<Context> {
 
     lateinit var movieRecyclerView: RecyclerView
 
-
     override fun createView(ui: AnkoContext<Context>) = with(ui) {
         constraintLayout {
-            movieRecyclerView = recyclerView().lparams(width = matchParent, height = wrapContent)
+            movieRecyclerView = recyclerView(
+            ).lparams{
+                width = matchParent
+                isVerticalScrollBarEnabled = true
+                height = wrapContent }
+            }
         }
     }
-}

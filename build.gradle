@@ -27,6 +27,7 @@ ext {
     archLifecycleVersion = '1.1.1'
     retrofitVersion= '2.3.0'
     anko_version = '0.10.7'
+    koin_version = '1.0.1'
 }
 
 task clean(type: Delete) {

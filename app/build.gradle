@@ -69,6 +69,13 @@ dependencies {
     implementation "org.jetbrains.anko:anko-recyclerview-v7-coroutines:$rootProject.anko_version"
     implementation "org.jetbrains.anko:anko-cardview-v7:$rootProject.anko_version"
 
+    // Koin for Android
+    implementation "org.koin:koin-android:$koin_version"
+    // Koin Android Scope feature
+    implementation "org.koin:koin-android-scope:$koin_version"
+    // Koin Android ViewModel feature
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
